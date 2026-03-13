@@ -196,6 +196,12 @@ class PocketTrusteeCLI(Cmd):
             console.print(f"发生错误,{key.hex()}", style='bold red')
             return
         device_fs = DeviceFS(key)
+        # if './devices/<device_name>.pkt' exists, rename it
+        if os.path.exists('./devices/' + device_name + '.pkt'):
+            rename_try_count = 1
+            while os.path.exists('./devices/' + device_name + '(' + str(rename_try_count) + ').pkt'):
+                rename_try_count += 1
+            os.rename('./devices/' + device_name + '.pkt', './devices/' + device_name + '(' + str(rename_try_count) + ').pkt')
         device_fs.save_as_file(f'./devices/{device_name}.pkt')
         finfo = open('./resource/resource.json', 'r', encoding='utf-8')
         finfo = json.loads(finfo.read())
